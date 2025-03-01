@@ -1,8 +1,3 @@
-/*******************************************************/
-/*                Whitelist Data                       */
-/* This array is hidden from the UI but can be seen via  */
-/* browser developer tools. Modify as necessary.       */
-/*******************************************************/
 const WHITELIST_DATA = [
   "0x1234567890abcdef1234567890abcdef12345678",
   "0xabcdefabcdefabcdefabcdefabcdefabcdef1234",
@@ -14,10 +9,3 @@ const WHITELIST_DATA = [
   "0xb6b3d24d6bf244387a2d0bd439a7793d5ae6c45e",
   "0x142ee9a343b035b73f5403b6ed79d9b78e717382"
 ];
-
-// Ensure the global variable 'whitelist' is set.
-if (typeof whitelist !== "undefined") {
-  whitelist = WHITELIST_DATA;
-} else {
-  window.whitelist = WHITELIST_DATA;
-}
