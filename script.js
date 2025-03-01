@@ -1,10 +1,3 @@
-/*******************************************************/
-/*           Maximals NFT Whitelist Checker            */
-/*******************************************************/
-
-/* Global Variables */
-let whitelist = (typeof WHITELIST_DATA !== "undefined") ? WHITELIST_DATA : [];
-
 document.addEventListener("DOMContentLoaded", () => {
     loadHistory();
 });
@@ -16,32 +9,28 @@ function checkWhitelist() {
     clearMessage();
 
     if (!walletInput || walletInput.length < 10) {
-        showMessage("⚠ Invalid wallet address format.", "red");
+        showMessage("⚠ Invalid wallet format. Try again.", "red");
         return;
     }
 
-    const ethRegex = /^0x[a-fA-F0-9]{40}$/;
-    const btcRegex = /^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$/;
-    const solRegex = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
+    const ethPattern = /^0x[a-fA-F0-9]{40}$/;
+    const btcPattern = /^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$/;
+    const solPattern = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
 
-    if (!(ethRegex.test(walletInput) || btcRegex.test(walletInput) || solRegex.test(walletInput))) {
-        showMessage("⚠ Enter a valid wallet address.", "red");
+    if (!(ethPattern.test(walletInput) || btcPattern.test(walletInput) || solPattern.test(walletInput))) {
+        showMessage("⚠ Enter a valid wallet (ETH, BTC, SOL).", "red");
         return;
     }
 
     showMessage("⏳ Checking...", "blue");
 
     setTimeout(() => {
-        const normalizedInput = walletInput.toLowerCase();
-        const normalizedWhitelist = whitelist.map(addr => addr.toLowerCase());
-
-        if (normalizedWhitelist.includes(normalizedInput)) {
+        const normalizedWhitelist = WHITELIST_DATA.map(addr => addr.toLowerCase());
+        if (normalizedWhitelist.includes(walletInput.toLowerCase())) {
             showMessage("✅ Your wallet is whitelisted!", "green");
         } else {
             showMessage("❌ Your wallet is NOT whitelisted.", "red");
         }
-
-        updateHistory(walletInput);
     }, 1500);
 }
 
@@ -50,7 +39,6 @@ function showMessage(text, color) {
     messageEl.innerText = text;
     messageEl.style.color = color;
     messageEl.style.opacity = 1;
-
     setTimeout(() => {
         messageEl.style.opacity = 0;
     }, 2000);
@@ -58,18 +46,4 @@ function showMessage(text, color) {
 
 function clearMessage() {
     document.getElementById("message").innerText = "";
-}
-
-/* Local Storage for History */
-function updateHistory(wallet) {
-    let history = JSON.parse(localStorage.getItem("checkedHistory")) || [];
-    if (!history.includes(wallet)) {
-        history.unshift(wallet);
-        if (history.length > 5) history = history.slice(0, 5);
-        localStorage.setItem("checkedHistory", JSON.stringify(history));
-    }
-}
-
-function loadHistory() {
-    let history = JSON.parse(localStorage.getItem("checkedHistory")) || [];
 }
